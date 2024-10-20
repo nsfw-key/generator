@@ -104,7 +104,13 @@
     <div class="floating-pumpkin">🎃</div>
 
     <script>
-        // Dosya uzantısını ve doğru dizini kontrol et
+        // Rastgele anahtar seçmek için fonksiyon
+        function getRandomKey(keys) {
+            const randomIndex = Math.floor(Math.random() * keys.length);
+            return keys[randomIndex];
+        }
+
+        // Dosyayı fetch ile yükle
         fetch('key.txt')
             .then(response => {
                 if (!response.ok) {
@@ -113,7 +119,9 @@
                 return response.text();
             })
             .then(data => {
-                document.getElementById('generated-key').innerText = data;
+                const keys = data.split('\n').filter(key => key.trim() !== ''); // Satırları ayır ve boş satırları filtrele
+                const randomKey = getRandomKey(keys); // Rastgele bir anahtar seç
+                document.getElementById('generated-key').innerText = randomKey; // Anahtarı göster
             })
             .catch(error => {
                 console.error('Anahtar yüklenirken hata oluştu:', error);
