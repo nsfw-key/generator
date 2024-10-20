@@ -3,105 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script data-cfasync="false" src="//dcbbwymp1bhlf.cloudfront.net/?wbbcd=1083022"></script>
+    <script data-cfasync="false" src="//dcbbwymp1bhlf.cloudfront.net/?wbbcd=1070832"></script>
     <title>SecretExploits Halloween Edition</title>
+    <link rel="icon" href="logo.png" type="image/png">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Spooky&display=swap');
+
         body {
-            background-color: #1c1c1c;
-            color: #fff;
-            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
+            font-family: 'Arial';
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            background: linear-gradient(to bottom right, #0c0b0b, #2e2e2e);
+            color: #ff7518;
             overflow: hidden;
+            position: relative;
         }
-
         .container {
+            background: rgba(20, 20, 20, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
             text-align: center;
-            background-color: #2b2b2b;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 0 15px rgba(255, 140, 0, 0.5);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
+            z-index: 2;
+            animation: fadeIn 1s ease-in-out;
         }
-
-        .title {
-            font-size: 32px;
-            color: orange;
-            font-weight: bold;
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px orange;
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            color: #ff7518;
+            text-shadow: 0 0 20px rgba(255, 117, 24, 0.8);
         }
-
-        .title .icon {
-            font-size: 40px;
-            vertical-align: middle;
-        }
-
-        .key-box {
-            font-size: 24px;
-            background-color: #4b4b4b;
-            padding: 10px;
+        .key {
+            background: rgba(255, 117, 24, 0.2);
+            padding: 15px;
+            margin: 20px 0;
             border-radius: 10px;
-            margin-bottom: 20px;
-            color: #ff9800;
-            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #ffffff;
+            word-wrap: break-word;
+            word-break: break-all;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
         }
-
-        .button {
-            background-color: #ff5722;
+        .copy-button {
+            background-color: #ff7518;
             color: white;
             border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            border-radius: 5px;
+            padding: 15px 30px;
+            border-radius: 30px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            font-size: 1.2em;
+            transition: background-color 0.3s, transform 0.3s;
         }
-
-        .button:hover {
-            background-color: #ff3d00;
+        .copy-button:hover {
+            background-color: #e65c00;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 117, 24, 0.7);
         }
-
-        /* Halloween decorations */
-        .floating-ghost {
+        .copy-button:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+        .copyright {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.9em;
+            color: #cccccc;
+            z-index: 3;
+        }
+        canvas {
             position: absolute;
-            top: 10px;
-            left: 10px;
-            font-size: 40px;
-            animation: float 4s ease-in-out infinite;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
         }
 
-        .floating-pumpkin {
-            position: absolute;
-            top: 50px;
-            right: 10px;
-            font-size: 40px;
-            animation: float 5s ease-in-out infinite alternate;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
-        @keyframes float {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-            100% { transform: translateY(0); }
+        @keyframes fall {
+            0% {
+                transform: translateY(-150%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(100%);
+                opacity: 1;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="title">
-            🎃 SecretExploits Halloween Edition 🎃
-        </div>
-        <div class="key-box" id="generated-key">
-            <!-- Anahtar burada gösterilecek -->
-        </div>
-        <button class="button" onclick="copyKey()">Copy Key</button>
+        <h1>🎃 SecretExploits Halloween Edition 🎃</h1>
+        <p>Your generated key is:</p>
+        <div class="key" id="key">Anahtar yükleniyor...</div>
+        <button class="copy-button" onclick="copyToClipboard()">Copy Key</button>
     </div>
-
-    <!-- Halloween floating decorations -->
-    <div class="floating-ghost">👻</div>
-    <div class="floating-pumpkin">🎃</div>
+    <canvas id="canvas"></canvas>
+    <div class="copyright">© 2024 SecretExploits. All rights reserved.</div>
 
     <script>
         // Rastgele anahtar seçmek için fonksiyon
@@ -110,7 +130,7 @@
             return keys[randomIndex];
         }
 
-        // Dosyayı fetch ile yükle
+        // Dosyadan anahtarları yükle ve rastgele bir tanesini seç
         fetch('key.txt')
             .then(response => {
                 if (!response.ok) {
@@ -121,24 +141,97 @@
             .then(data => {
                 const keys = data.split('\n').filter(key => key.trim() !== ''); // Satırları ayır ve boş satırları filtrele
                 const randomKey = getRandomKey(keys); // Rastgele bir anahtar seç
-                document.getElementById('generated-key').innerText = randomKey; // Anahtarı göster
+                document.getElementById('key').innerText = randomKey; // Anahtarı göster
             })
             .catch(error => {
                 console.error('Anahtar yüklenirken hata oluştu:', error);
-                document.getElementById('generated-key').innerText = "Anahtar bulunamadı.";
+                document.getElementById('key').innerText = "Anahtar bulunamadı.";
             });
 
         // Anahtarı panoya kopyala
-        function copyKey() {
-            const key = document.getElementById('generated-key').innerText;
-            navigator.clipboard.writeText(key)
-                .then(() => {
-                    alert('Anahtar panoya kopyalandı!');
-                })
-                .catch(err => {
-                    console.error('Kopyalama hatası: ', err);
-                });
+        function copyToClipboard() {
+            const keyElement = document.getElementById('key');
+            const keyText = keyElement.textContent || keyElement.innerText;
+
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(keyText)
+                    .then(() => {
+                        alert('Key copied to clipboard. Press Redeem Key button on Discord.');
+                    })
+                    .catch(err => {
+                        console.error('Could not copy text: ', err);
+                    });
+            } else {
+                const textArea = document.createElement('textarea');
+                textArea.value = keyText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    alert('Key copied to clipboard. Press Redeem Key button on Discord.');
+                } catch (err) {
+                    console.error('Could not copy text: ', err);
+                }
+                document.body.removeChild(textArea);
+            }
         }
+
+        // Animasyon kodları (mevcut animasyonlar bozulmadan çalışmaya devam edecek)
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let elements = [];
+        const maxElements = 80;
+
+        const images = ['🎃', '🦇', '👻'];
+        const fontSize = 30;
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        function createElement() {
+            elements.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height - canvas.height,
+                speedY: Math.random() * 3 + 1,
+                symbol: images[Math.floor(Math.random() * images.length)]
+            });
+        }
+
+        function updateElements() {
+            elements.forEach((el, index) => {
+                el.y += el.speedY;
+
+                if (el.y > canvas.height) {
+                    elements.splice(index, 1);
+                }
+            });
+        }
+
+        function drawElements() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.font = `${fontSize}px Arial`;
+            ctx.textAlign = 'center';
+
+            elements.forEach(el => {
+                ctx.fillText(el.symbol, el.x, el.y);
+            });
+        }
+
+        function animateElements() {
+            if (elements.length < maxElements) {
+                createElement();
+            }
+            updateElements();
+            drawElements();
+            requestAnimationFrame(animateElements);
+        }
+
+        animateElements();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
     </script>
 </body>
 </html>
