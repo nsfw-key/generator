@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecretExploits Halloween Edition</title>
+    <style>
+        body {
+            background-color: #1c1c1c;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #2b2b2b;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(255, 140, 0, 0.5);
+        }
+
+        .title {
+            font-size: 32px;
+            color: orange;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px orange;
+        }
+
+        .title .icon {
+            font-size: 40px;
+            vertical-align: middle;
+        }
+
+        .key-box {
+            font-size: 24px;
+            background-color: #4b4b4b;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            color: #ff9800;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .button {
+            background-color: #ff5722;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #ff3d00;
+        }
+
+        /* Halloween decorations */
+        .floating-ghost {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 40px;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .floating-pumpkin {
+            position: absolute;
+            top: 50px;
+            right: 10px;
+            font-size: 40px;
+            animation: float 5s ease-in-out infinite alternate;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            🎃 SecretExploits Halloween Edition 🎃
+        </div>
+        <div class="key-box" id="generated-key">
+            <!-- Anahtar burada gösterilecek -->
+        </div>
+        <button class="button" onclick="copyKey()">Copy Key</button>
+    </div>
+
+    <!-- Halloween floating decorations -->
+    <div class="floating-ghost">👻</div>
+    <div class="floating-pumpkin">🎃</div>
+
+    <script>
+        // Dosya uzantısını ve doğru dizini kontrol et
+        fetch('key.txt')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                document.getElementById('generated-key').innerText = data;
+            })
+            .catch(error => {
+                console.error('Anahtar yüklenirken hata oluştu:', error);
+                document.getElementById('generated-key').innerText = "Anahtar bulunamadı.";
+            });
+
+        // Anahtarı panoya kopyala
+        function copyKey() {
+            const key = document.getElementById('generated-key').innerText;
+            navigator.clipboard.writeText(key)
+                .then(() => {
+                    alert('Anahtar panoya kopyalandı!');
+                })
+                .catch(err => {
+                    console.error('Kopyalama hatası: ', err);
+                });
+        }
+    </script>
+</body>
+</html>
